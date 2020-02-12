@@ -29,7 +29,7 @@ resource "aws_kms_key" "guardduty_kms_key" {
       "Sid": "Allow use of the key",
       "Effect": "Allow",
       "Principal": {
-        "AWS": "arn:aws:iam::781119243238:root"
+        "AWS": "arn:aws:iam::${local.account_id}:root"
       },
       "Action": [
           "kms:Encrypt",
