@@ -1,0 +1,63 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+          "Sid": "Allow GuardDuty to use the getBucketLocation operation",
+          "Effect": "Allow",
+          "Principal": {
+              "Service": "guardduty.amazonaws.com"
+          },
+          "Action": "s3:GetBucketLocation",
+          "Resource": "arn:aws:s3:::${guardduty_bucket}"
+      },
+      {
+          "Sid": "Allow GuardDuty to upload objects to the bucket",
+          "Effect": "Allow",
+          "Principal": {
+              "Service": "guardduty.amazonaws.com"
+          },
+          "Action": "s3:PutObject",
+          "Resource": "arn:aws:s3:::${guardduty_bucket}/*"
+      },
+      {
+          "Sid": "Deny unencrypted object uploads.",
+          "Effect": "Deny",
+          "Principal": {
+              "Service": "guardduty.amazonaws.com"
+          },
+          "Action": "s3:PutObject",
+          "Resource": "arn:aws:s3:::${guardduty_bucket}/*",
+          "Condition": {
+              "StringNotEquals": {
+                  "s3:x-amz-server-side-encryption": "aws:kms"
+              }
+          }
+      },
+      {
+          "Sid": "Deny incorrect encryption header.",
+          "Effect": "Deny",
+          "Principal": {
+              "Service": "guardduty.amazonaws.com"
+          },
+          "Action": "s3:PutObject",
+          "Resource": "arn:aws:s3:::${guardduty_bucket}/*",
+          "Condition": {
+              "StringNotEquals": {
+                  "s3:x-amz-server-side-encryption-aws-kms-key-id": "arn:aws:kms:${aws_region}:${aws_account_id}:key/${gd_kms_key_id}"
+              }
+          }
+      },
+      {
+          "Sid": "Deny non-HTTPS access",
+          "Effect": "Deny",
+          "Principal": "*",
+          "Action": "s3:*",
+          "Resource": "arn:aws:s3:::${guardduty_bucket}/*",
+          "Condition": {
+              "Bool": {
+                  "aws:SecureTransport": "false"
+              }
+          }
+      }
+  ]
+}
