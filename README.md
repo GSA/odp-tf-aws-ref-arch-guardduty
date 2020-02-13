@@ -39,8 +39,14 @@ The following variables need to be set either by setting proper environment vari
 
 | Variable      |  Type  |  Description  |
 |---          |---        |---  | 
-| aws_region  |  string |   Default region for region specific settings. |
-| aws_account_id | string | AWS Account to configure |
+| guardduty_bucket_name | string | S3 Bucket for Guardduty finidngs |
+| guardduty_bucket_acl | string | ACL value ex: log-delivery-write |
+| guardduty_bucket_destroy | bool | (True/False) |
+| guardduty_bucket_enable_versioning | bool | (True/False) |
+| guardduty_bucket_block_public_acls | bool | (True/False) |
+| guardduty_bucket_ignore_public_acls | bool | (True/False) |
+| guardduty_bucket_block_public_policy | bool | (True/False) |
+| guardduty_bucket_restrict_public_buckets | bool | (True/False) |
 
 
 
@@ -50,7 +56,8 @@ The following variables need to be set either by setting proper environment vari
 
 | Variable      |  Type  |  Description  |
 |---          |---        |---  | 
-|   |   |    |
+|  guardduty_bucket_arn |  string | GuardDuty bucket S3 arn  |
+|  guardduty_bucket_id |  string |  GuardDuty bucket S3 id  |
 
 ## Module Setup <a name="s5"></a>
 
