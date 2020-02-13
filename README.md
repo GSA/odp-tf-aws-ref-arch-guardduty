@@ -61,9 +61,76 @@ The following variables need to be set either by setting proper environment vari
 
 ## Module Setup <a name="s5"></a>
 
-### To invoke this module
+### Example
 
----- TBD ---- TO DO ------
+
+```
+provider "aws" {
+  region  = "us-east-1"
+}
+
+variable "guardduty_bucket_name" {
+  type        = string
+  description = "The name given to the primary guardduty bucket"
+}
+
+variable "guardduty_bucket_acl" {
+  description = "The ACL applied to the primary guardduty bucket"
+  default     = "log-delivery-write"
+}
+
+variable "guardduty_bucket_destroy" {
+  type        = bool
+  description = "The boolean value indicating whether Terraform can destroy the bucket with objects still inside"
+  default     = false
+}
+
+variable "guardduty_bucket_enable_versioning" {
+  type        = bool
+  description = "The boolean value enabling (true) or disabling (false) versioning on the guardduty bucket"
+  default     = true
+}
+
+variable "guardduty_bucket_block_public_acls" {
+  type        = bool
+  description = "The boolean value enabling (true) or disabling (false) the blocking of public ACL creation for the bucket"
+  default     = true
+}
+
+variable "guardduty_bucket_ignore_public_acls" {
+  type        = bool
+  description = "The boolean value enabling (true) or disabling (false) the ignoring of public ACLs created for the bucket"
+  default     = true
+}
+
+variable "guardduty_bucket_block_public_policy" {
+  type        = bool
+  description = "The boolean value enabling (true) or disabling (false) the blocking of public policy creation for the bucket"
+  default     = true
+}
+
+variable "guardduty_bucket_restrict_public_buckets" {
+  type        = bool
+  description = "The boolean value enabling (true) or disabling (false) the blocking of public and cross-account access with the public bucket policy for the bucket"
+  default     = true
+}
+
+
+module "guardduty" {
+  #Required Inputs
+  source                                   = "../"
+  guardduty_bucket_name                    = "${var.guardduty_bucket_name}"
+  guardduty_bucket_acl                     = "${var.guardduty_bucket_acl}"
+  guardduty_bucket_destroy                 = "${var.guardduty_bucket_destroy}"
+  guardduty_bucket_enable_versioning       = "${var.guardduty_bucket_enable_versioning}"
+  guardduty_bucket_block_public_acls       = "${var.guardduty_bucket_block_public_acls}"
+  guardduty_bucket_ignore_public_acls      = "${var.guardduty_bucket_ignore_public_acls}"
+  guardduty_bucket_block_public_policy     = "${var.guardduty_bucket_block_public_policy}"
+  guardduty_bucket_restrict_public_buckets = "${var.guardduty_bucket_restrict_public_buckets}"
+}
+
+```
+
 
 #### If we need to run this module indepdently then use the below commands
 
