@@ -44,3 +44,28 @@ variable "guardduty_bucket_restrict_public_buckets" {
   description = "The boolean value enabling (true) or disabling (false) the blocking of public and cross-account access with the public bucket policy for the logging bucket"
   default     = true
 }
+
+variable "guardduty_logging_target_bucket" {
+  type    = string
+  default = "xxxxxxxxxx"
+}
+
+variable "guardduty_logging_prefix" {
+  type    = string
+  default = "odp-guardduty"
+}
+
+variable "guardduty_bucket_enable_backup" {
+  description = "(optional) The boolean value enabling (true) or disabling (false) backups to glacier on the guardduty bucket"
+  default     = "true"
+}
+
+variable "guardduty_bucket_backup_days" {
+  description = "(optional) The age of an object in number of days before it can be archived to glacier"
+  default     = "365"
+}
+
+variable "guardduty_bucket_backup_expiration_days" {
+  description = "(optional) The age of an object in number of days before it can be safely discarded"
+  default     = "900"
+}
