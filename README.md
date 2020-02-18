@@ -115,6 +115,25 @@ variable "guardduty_bucket_restrict_public_buckets" {
   default     = true
 }
 
+variable "guardduty_bucket_enable_backup" {
+  description = "(optional) The boolean value enabling (true) or disabling (false) backups to glacier on the guardduty bucket"
+  default     = "true"
+}
+
+variable "guardduty_bucket_backup_days" {
+  description = "(optional) The age of an object in number of days before it can be archived to glacier"
+  default     = "365"
+}
+
+variable "guardduty_bucket_backup_expiration_days" {
+  description = "(optional) The age of an object in number of days before it can be safely discarded"
+  default     = "900"
+}
+
+variable "guardduty_logging_prefix" {
+  type    = string
+  default = "odp-guardduty"
+}
 
 module "guardduty" {
   #Required Inputs
@@ -124,9 +143,14 @@ module "guardduty" {
   guardduty_bucket_destroy                 = "${var.guardduty_bucket_destroy}"
   guardduty_bucket_enable_versioning       = "${var.guardduty_bucket_enable_versioning}"
   guardduty_bucket_block_public_acls       = "${var.guardduty_bucket_block_public_acls}"
-  guardduty_bucket_ignore_public_acls      = "${var.guardduty_bucket_ignore_public_acls}"
-  guardduty_bucket_block_public_policy     = "${var.guardduty_bucket_block_public_policy}"
-  guardduty_bucket_restrict_public_buckets = "${var.guardduty_bucket_restrict_public_buckets}"
+  guardduty_bucket_ignore_public_acls      = "${var.guardduty_bucket_ignore_public_acls"
+  guardduty_bucket_block_public_policy     = "{var.guardduty_bucket_block_public_policy"
+  guardduty_bucket_restrict_public_buckets = "{var.guardduty_bucket_restrict_public_buckets}"
+  guardduty_logging_target_bucket          = "${module.grace_logging.access_bucket_id}"
+  guardduty_logging_prefix                 = "${var.guardduty_logging_prefix}"
+  guardduty_bucket_backup_days             = "${var.guardduty_bucket_backup_days}"
+  guardduty_bucket_backup_expiration_days  = "${var.guardduty_bucket_backup_expiration_days}"
+  guardduty_bucket_enable_backup           = "${var.guardduty_bucket_enable_backup}"
 }
 
 ```

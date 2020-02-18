@@ -7,6 +7,34 @@ resource "aws_s3_bucket" "guardduty" {
   versioning {
     enabled = var.guardduty_bucket_enable_versioning
   }
+
+  logging {
+    target_bucket = var.guardduty_logging_target_bucket
+    target_prefix = var.guardduty_logging_prefix
+  }
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }  
+
+  lifecycle_rule {
+    enabled = var.guardduty_bucket_enable_backup
+
+    prefix = var.guardduty_logging_prefix
+
+    transition {
+      days          = var.guardduty_bucket_backup_days
+      storage_class = "GLACIER"
+    }
+
+    expiration {
+      days = var.guardduty_bucket_backup_expiration_days
+    }
+  }
 }
 
 # Set Public Access Block
