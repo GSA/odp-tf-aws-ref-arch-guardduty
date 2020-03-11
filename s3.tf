@@ -19,7 +19,7 @@ resource "aws_s3_bucket" "guardduty" {
         sse_algorithm = "AES256"
       }
     }
-  }  
+  }
 
   lifecycle_rule {
     enabled = var.guardduty_bucket_enable_backup
