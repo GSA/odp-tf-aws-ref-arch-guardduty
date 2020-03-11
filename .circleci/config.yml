@@ -72,7 +72,7 @@ commands:
             pwd
             ls -al
             # tfsec ./
-            find . -name ".terraform" -prune -o -type f -name "*.tf" -exec dirname {} \;|sort -u | while read m; do (cd "$m" && tfsec ./ && echo "√ $m") || exit 1 ; done
+            find . -name ".terraform" -prune -o -type f -name "*.tf" -exec dirname {} \;|sort -u | while read m; do (cd "$m" && echo `pwd` && ls -al && tfsec ./ && echo "√ $m") || exit 1 ; done
             
 jobs:
   terraform-checker:
