@@ -45,7 +45,7 @@ variable "guardduty_bucket_restrict_public_buckets" {
 }
 
 variable "guardduty_logging_target_bucket" {
-  type    = string
+  type = string
 }
 
 variable "guardduty_bucket_enable_backup" {
