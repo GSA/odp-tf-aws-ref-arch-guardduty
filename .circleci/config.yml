@@ -23,6 +23,7 @@ commands:
 
             cd << parameters.terraform_dir >> 
             
+
             terraform version
 
             if [ "${tf_command}" != "validate" ]
@@ -66,13 +67,8 @@ commands:
             # Download and install tfsec
             sudo wget -O /usr/local/bin/tfsec https://github.com/liamg/tfsec/releases/download/v0.19.0/tfsec-linux-amd64 && sudo chmod +x /usr/local/bin/tfsec
             # Run tfsec
-            echo "list files"
-            ls -al /usr/local/bin
             echo "Run tfsec"
-            pwd
-            ls -al
-            # tfsec ./
-            find . -name ".terraform" -prune -o -type f -name "*.tf" -exec dirname {} \;|sort -u | while read m; do (cd "$m" && echo `pwd` && ls -al && tfsec ./ && echo "√ $m") || exit 1 ; done
+            tfsec ./
             
 jobs:
   terraform-checker:
