@@ -1,63 +1,143 @@
 {
-  "Version": "2012-10-17",
-  "Statement": [
-      {
-          "Sid": "Allow GuardDuty to use the getBucketLocation operation",
-          "Effect": "Allow",
-          "Principal": {
-              "Service": "guardduty.amazonaws.com"
+    "Version":"2012-10-17",
+    "Statement":[
+       {
+          "Sid":"AWSLogDeliveryWrite",
+          "Effect":"Allow",
+          "Principal":{
+             "Service":[
+                "cloudtrail.amazonaws.com",
+                "config.amazonaws.com"
+             ]
           },
-          "Action": "s3:GetBucketLocation",
-          "Resource": "arn:aws:s3:::${guardduty_bucket}"
-      },
-      {
-          "Sid": "Allow GuardDuty to upload objects to the bucket",
-          "Effect": "Allow",
-          "Principal": {
-              "Service": "guardduty.amazonaws.com"
+          "Action":"s3:PutObject",
+          "Resource":"arn:aws:s3:::${grace_logging_bucket}/*"
+       },
+       {
+          "Sid":"AWSFlowLogWrite",
+          "Effect":"Allow",
+          "Principal":{
+             "Service":[
+                "cloudtrail.amazonaws.com",
+                "config.amazonaws.com"
+             ]
           },
-          "Action": "s3:PutObject",
-          "Resource": "arn:aws:s3:::${guardduty_bucket}/*"
-      },
-      {
-          "Sid": "Deny unencrypted object uploads.",
-          "Effect": "Deny",
-          "Principal": {
-              "Service": "guardduty.amazonaws.com"
-          },
-          "Action": "s3:PutObject",
-          "Resource": "arn:aws:s3:::${guardduty_bucket}/*",
-          "Condition": {
-              "StringNotEquals": {
-                  "s3:x-amz-server-side-encryption": "aws:kms"
-              }
+          "Action":"s3:PutObject",
+          "Resource":"arn:aws:s3:::${grace_logging_bucket}/odp-flowlogs/*",
+          "Condition":{
+             "StringEquals":{
+                "s3:x-amz-acl":"bucket-owner-full-control"
+             }
           }
-      },
-      {
-          "Sid": "Deny incorrect encryption header.",
-          "Effect": "Deny",
-          "Principal": {
-              "Service": "guardduty.amazonaws.com"
+       },
+       {
+          "Sid":"AWSCloudTrailWrite",
+          "Effect":"Allow",
+          "Principal":{
+             "Service":"cloudtrail.amazonaws.com"
           },
-          "Action": "s3:PutObject",
-          "Resource": "arn:aws:s3:::${guardduty_bucket}/*",
-          "Condition": {
-              "StringNotEquals": {
-                  "s3:x-amz-server-side-encryption-aws-kms-key-id": "arn:aws:kms:${aws_region}:${aws_account_id}:key/${gd_kms_key_id}"
-              }
+          "Action":"s3:PutObject",
+          "Resource":"arn:aws:s3:::${grace_logging_bucket}/odp-cloudtrail/*"
+       },
+       {
+          "Sid":"AWSLogDeliveryAclCheck",
+          "Effect":"Allow",
+          "Principal":{
+             "Service":[
+                "cloudtrail.amazonaws.com",
+                "delivery.logs.amazonaws.com",
+                "config.amazonaws.com"
+             ]
+          },
+          "Action":"s3:GetBucketAcl",
+          "Resource":"arn:aws:s3:::${grace_logging_bucket}"
+       },
+       {
+          "Sid":"DenyNonAESEncryptedObjectUploads",
+          "Effect":"Deny",
+          "Principal":{
+             "AWS":"*"
+          },
+          "Action":"s3:PutObject",
+          "Resource":"arn:aws:s3:::${grace_logging_bucket}/*",
+          "Condition":{
+             "StringNotEquals":{
+                "s3:x-amz-server-side-encryption":[
+                   "AES256",
+                   "aws:kms"
+                ]
+             }
           }
-      },
-      {
-          "Sid": "Deny non-HTTPS access",
-          "Effect": "Deny",
-          "Principal": "*",
-          "Action": "s3:*",
-          "Resource": "arn:aws:s3:::${guardduty_bucket}/*",
-          "Condition": {
-              "Bool": {
-                  "aws:SecureTransport": "false"
-              }
+       },
+       {
+          "Sid":"DenyUnEncryptedObjectUploads",
+          "Effect":"Deny",
+          "Principal":"*",
+          "Action":"s3:PutObject",
+          "Resource":"arn:aws:s3:::${grace_logging_bucket}/*",
+          "Condition":{
+             "Null":{
+                "s3:x-amz-server-side-encryption":"true"
+             }
           }
-      }
-  ]
-}
+       },
+       {
+          "Sid":"Allow GuardDuty to use the getBucketLocation operation",
+          "Effect":"Allow",
+          "Principal":{
+             "Service":"guardduty.amazonaws.com"
+          },
+          "Action":"s3:GetBucketLocation",
+          "Resource":"arn:aws:s3:::${grace_logging_bucket}"
+       },
+       {
+          "Sid":"Allow GuardDuty to upload objects to the bucket",
+          "Effect":"Allow",
+          "Principal":{
+             "Service":"guardduty.amazonaws.com"
+          },
+          "Action":"s3:PutObject",
+          "Resource":"arn:aws:s3:::${grace_logging_bucket}/*"
+       },
+       {
+          "Sid":"Deny unencrypted object uploads.",
+          "Effect":"Deny",
+          "Principal":{
+             "Service":"guardduty.amazonaws.com"
+          },
+          "Action":"s3:PutObject",
+          "Resource":"arn:aws:s3:::${grace_logging_bucket}/*",
+          "Condition":{
+             "StringNotEquals":{
+                "s3:x-amz-server-side-encryption":"aws:kms"
+             }
+          }
+       },
+       {
+          "Sid":"Deny incorrect encryption header.",
+          "Effect":"Deny",
+          "Principal":{
+             "Service":"guardduty.amazonaws.com"
+          },
+          "Action":"s3:PutObject",
+          "Resource":"arn:aws:s3:::${grace_logging_bucket}/*",
+          "Condition":{
+             "StringNotEquals":{
+                "s3:x-amz-server-side-encryption-aws-kms-key-id":"arn:aws:kms:${aws_region}:${aws_account_id}:key/${gd_kms_key_id}"
+             }
+          }
+       },
+       {
+          "Sid":"Deny non-HTTPS access",
+          "Effect":"Deny",
+          "Principal":"*",
+          "Action":"s3:*",
+          "Resource":"arn:aws:s3:::${grace_logging_bucket}/*",
+          "Condition":{
+             "Bool":{
+                "aws:SecureTransport":"false"
+             }
+          }
+       }
+    ]
+ }
