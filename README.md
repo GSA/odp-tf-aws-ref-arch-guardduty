@@ -41,6 +41,7 @@ The following variables need to be set either by setting proper environment vari
 |---          |---        |---  | 
 | guardduty_bucket_name | string | S3 Bucket for guardduty findings |
 | guardduty_logging_prefix | string | logging prefix |
+| guardduty_logging_bucket_kms_arn | string | logging bucket kms arn |
 
 
 
@@ -55,7 +56,7 @@ provider "aws" {
   region  = "us-east-1"
 }
 
-variable "guardduty_bucket_name" {
+variable "guardduty_logging_bucket_name" {
   type        = string
   description = "The name given to the primary guardduty bucket"
 }
@@ -65,11 +66,16 @@ variable "guardduty_logging_prefix" {
   default = "odp-guardduty"
 }
 
+variable "guardduty_logging_bucket_kms_arn" {
+  type    = string
+  default = "kms-key-arn"
+
 module "guardduty" {
   #Required Inputs
   source                                   = "../"
-  guardduty_bucket_name                    = "${var.guardduty_bucket_name}"
+  guardduty_logging_bucket_name            = "${var.guardduty_logging_bucket_name}"
   guardduty_logging_prefix                 = "${var.guardduty_logging_prefix}"
+  guardduty_logging_bucket_kms_arn         = "${var.guardduty_logging_bucket_kms_arn}"
 }
 
 ```
