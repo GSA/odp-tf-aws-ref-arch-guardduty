@@ -16,7 +16,7 @@ resource "aws_s3_bucket_policy" "guardduty" {
 
 resource "aws_s3_bucket_object" "guardduty_folder" {
   bucket     = var.guardduty_logging_bucket_name
-  key        = "odp-guardduty/"
+  key         = "${var.guardduty_logging_prefix}/"
   source     = "/dev/null"
   kms_key_id = var.guardduty_logging_bucket_kms_arn
 }
