@@ -1,3 +1,13 @@
-guardduty_logging_bucket_name    = "odp-aws-ref-arch-1-odp-logging-logging-development"
-guardduty_logging_prefix         = "odp-guardduty"
-guardduty_logging_bucket_kms_arn = "arn:aws:kms:us-east-1:12345:key/11111-e982-4917-86eb-1a2f983abc6a"
+guardduty_bucket_name                    = "odp-aws-ref-arch-1-odp-guardduty"
+guardduty_bucket_acl                     = "log-delivery-write"
+guardduty_bucket_destroy                 = true
+guardduty_bucket_enable_versioning       = true
+guardduty_bucket_block_public_acls       = true
+guardduty_bucket_ignore_public_acls      = true
+guardduty_bucket_block_public_policy     = true
+guardduty_bucket_restrict_public_buckets = true
+guardduty_logging_target_bucket          = "odp-logging-access-bucket"
+guardduty_logging_prefix                 = "odp-guardduty"
+guardduty_bucket_backup_days             = "365"
+guardduty_bucket_backup_expiration_days  = "900"
+guardduty_bucket_enable_backup           = true
