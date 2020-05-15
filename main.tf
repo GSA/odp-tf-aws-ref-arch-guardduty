@@ -14,14 +14,8 @@ resource "aws_guardduty_detector" "detector" {
 }
 
 resource "null_resource" "output_id" {
-
-  triggers = {
-    always_run    = "${timestamp()}"
-    export_bucket = var.guardduty_logging_bucket_name
-  }
-
   provisioner "local-exec" {
-    command = "aws guardduty create-publishing-destination --detector-id ${aws_guardduty_detector.detector.id} --destination-type S3 --destination-properties DestinationArn=arn:aws:s3:::${var.guardduty_logging_bucket_name}/${var.guardduty_logging_prefix},KmsKeyArn=arn:aws:kms:${local.region}:${local.account_id}:key/${aws_kms_key.guardduty_kms_key.key_id}"
+    command = "aws guardduty create-publishing-destination --detector-id ${aws_guardduty_detector.detector.id} --destination-type S3 --destination-properties DestinationArn=arn:aws:s3:::${var.guardduty_bucket_name},KmsKeyArn=arn:aws:kms:${local.region}:${local.account_id}:key/${aws_kms_key.guardduty_kms_key.key_id}"
   }
-  depends_on = [aws_guardduty_detector.detector, aws_kms_key.guardduty_kms_key, aws_s3_bucket_policy.guardduty]
+  depends_on = [aws_guardduty_detector.detector, aws_kms_key.guardduty_kms_key, aws_s3_bucket_public_access_block.guardduty]
 }
